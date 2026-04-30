@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Ai Youtube Gemini Summarizer",
+  "version": "1.0",
+  "description": "Save concise Gemini summaries, takeaways, claims, and watch decisions from YouTube videos.",
+  "icons": {
+    "16": "icon/ai_youtube_summarizer_logo.png",
+    "32": "icon/ai_youtube_summarizer_logo.png",
+    "48": "icon/ai_youtube_summarizer_logo.png",
+    "128": "icon/ai_youtube_summarizer_logo.png"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "sidePanel",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://youtube.com/*",
+    "https://m.youtube.com/*"
+  ],
+  "action": {
+    "default_title": "Ai Youtube Gemini Summarizer",
+    "default_icon": {
+      "16": "icon/ai_youtube_summarizer_logo.png",
+      "32": "icon/ai_youtube_summarizer_logo.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://youtube.com/*",
+        "https://m.youtube.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

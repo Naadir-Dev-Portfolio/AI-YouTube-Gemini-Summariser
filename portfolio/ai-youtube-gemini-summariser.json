@@ -1,0 +1,18 @@
+{
+  "section": "browserextensions",
+  "category": "chromium",
+  "n": 4,
+  "title": "AI-YouTube-Gemini-Summariser",
+  "img": "ai-youtube-gemini-summariser.png",
+  "imgFeatured": "ai-youtube-gemini-summariser-featured.png",
+  "desc": "A Chrome extension that enhances the functionality of Gemini within YouTube videos, enabling more efficient and accelerated learning and research.",
+  "code": "https://github.com/Naadir-Dev-Portfolio/AI-YouTube-Gemini-Summariser/blob/main/README.md",
+  "details": "https://github.com/Naadir-Dev-Portfolio/AI-YouTube-Gemini-Summariser/blob/main/README.md",
+  "tags": [
+    "Browser Extensions",
+    "Chrome",
+    "JavaScript",
+    "HTML",
+    "CSS"
+  ]
+}

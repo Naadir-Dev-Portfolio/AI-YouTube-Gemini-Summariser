@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ai Youtube Gemini Summarizer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-shell">
+      <div class="hero">
+        <div class="hero-copy">
+          <h1>Naadir's</h1>
+          <p class="hero-title">Ai Youtube Gemini Summarizer</p>
+          <p class="hero-sub">Extract the signal, skip the video</p>
+        </div>
+        <img
+          class="hero-logo"
+          src="icon/ai_youtube_summarizer_logo.png"
+          alt="Ai Youtube Gemini Summarizer logo"
+        >
+      </div>
+
+      <div id="entryCount" class="entry-count" style="display:none">
+        <span id="entryCountNum">0</span> video<span id="entryCountPlural">s</span> saved
+      </div>
+    </header>
+
+    <main class="middle-scroll">
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">YT</div>
+        <p class="empty-title">No videos saved yet</p>
+        <p class="empty-hint">Open a YouTube video and run a prompt to keep it here.</p>
+      </div>
+
+      <ul id="entryList" class="entry-list" role="list"></ul>
+    </main>
+
+    <footer class="bottom-bar">
+      <p class="disclaimer">
+        Summaries are generated in YouTube's Gemini panel and stored locally in this browser.
+      </p>
+    </footer>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
