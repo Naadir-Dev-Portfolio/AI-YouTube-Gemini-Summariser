@@ -152,13 +152,17 @@ async function refreshActiveVideo() {
   });
 
   const previousKey = currentVideo?.videoKey || null;
+  const previousSignature = currentVideo ? videoRenderSignature(currentVideo) : '';
+  const nextSignature = videoRenderSignature(nextVideo);
   currentVideo = nextVideo;
 
   if (previousKey !== nextVideo.videoKey && !findEntry(nextVideo.videoKey)) {
     expandedId = draftId(nextVideo.videoKey);
   }
 
-  render();
+  if (previousSignature !== nextSignature) {
+    render();
+  }
 }
 
 async function handleListClick(event) {
@@ -288,6 +292,8 @@ function render() {
   const countNum = document.getElementById('entryCountNum');
   const countPlural = document.getElementById('entryCountPlural');
 
+  const responseScrollPositions = captureResponseScrollPositions();
+
   const cards = buildCards();
 
   countNum.textContent = entries.length;
@@ -302,6 +308,7 @@ function render() {
 
   empty.style.display = 'none';
   list.innerHTML = cards.map((card) => buildCardHTML(card)).join('');
+  restoreResponseScrollPositions(responseScrollPositions);
 }
 
 function buildCards() {
@@ -379,7 +386,7 @@ function buildCardHTML(card) {
 
           <div class="response-list">
             ${responseKeys.length
-              ? responseKeys.map((key) => buildResponseHTML(entry.responses[key])).join('')
+              ? responseKeys.map((key) => buildResponseHTML(entry.videoKey, entry.responses[key])).join('')
               : '<p class="empty-inline">No summaries yet.</p>'}
           </div>
         </div>
@@ -415,16 +422,37 @@ function buildPromptButtons(videoKey) {
   `;
 }
 
-function buildResponseHTML(response) {
+function buildResponseHTML(videoKey, response) {
+  const scrollKey = responseScrollKey(videoKey, response);
+
   return `
     <article class="response-card">
       <div class="response-header">
         <span class="response-title">${esc(response.label || PROMPTS[response.promptKey]?.label || 'Response')}</span>
         <span class="response-date">${esc(formatDate(response.generatedAt))}</span>
       </div>
-      <pre class="response-text">${esc(response.text)}</pre>
+      <pre class="response-text" data-scroll-key="${esc(scrollKey)}">${esc(response.text)}</pre>
     </article>
   `;
+}
+
+function captureResponseScrollPositions() {
+  const positions = new Map();
+  document.querySelectorAll('.response-text[data-scroll-key]').forEach((element) => {
+    positions.set(element.dataset.scrollKey, element.scrollTop);
+  });
+  return positions;
+}
+
+function restoreResponseScrollPositions(responseScrollPositions) {
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.response-text[data-scroll-key]').forEach((element) => {
+      const scrollTop = responseScrollPositions.get(element.dataset.scrollKey);
+      if (typeof scrollTop === 'number') {
+        element.scrollTop = Math.min(scrollTop, element.scrollHeight - element.clientHeight);
+      }
+    });
+  });
 }
 
 async function sendMessageToTab(tabId, message) {
@@ -471,6 +499,27 @@ function normalizeVideo(video) {
     favicon: video.favicon || youtubeFavicon(),
     tabId: video.tabId,
   };
+}
+
+function videoRenderSignature(video) {
+  return [
+    video.videoKey,
+    video.title,
+    video.channel,
+    video.url,
+    video.canonicalUrl,
+    video.thumbnail,
+    video.favicon,
+    video.tabId,
+  ].join('|');
+}
+
+function responseScrollKey(videoKey, response) {
+  return [
+    videoKey,
+    response.promptKey || response.label || 'response',
+    response.generatedAt || '',
+  ].join('|');
 }
 
 function findEntry(videoKey) {
